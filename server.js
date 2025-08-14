@@ -3,7 +3,6 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const compression = require('compression');
-const rateLimit = require('express-rate-limit');
 const mongoose = require('mongoose');
 require('dotenv').config();
 
@@ -27,17 +26,6 @@ app.use(cors({
     : 'http://localhost:3000',
   credentials: true
 }));
-
-// Rate limiting
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: process.env.NODE_ENV === 'development' ? 1000 : 100, // More lenient in development
-  message: 'Too many requests from this IP, please try again later.',
-  standardHeaders: true,
-  legacyHeaders: false,
-  skip: (req) => req.path === '/health' // Skip rate limiting for health checks
-});
-app.use('/api/', limiter);
 
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
@@ -110,18 +98,6 @@ app.use('/api/auth', authRoutes);
 app.use('/api/jobs', jobRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/analytics', analyticsRoutes);
-
-// More lenient rate limiting for auth routes in development
-if (process.env.NODE_ENV === 'development') {
-  const authLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 2000, // Very lenient for auth testing
-    message: 'Too many authentication requests, please try again later.',
-    standardHeaders: true,
-    legacyHeaders: false
-  });
-  app.use('/api/auth', authLimiter);
-}
 
 // 404 handler
 app.use('*', (req, res) => {
