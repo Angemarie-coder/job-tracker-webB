@@ -34,7 +34,7 @@ const sendVerificationEmail = async (email, firstName, verificationToken) => {
             
             <h2 style="color: #1f2937; margin-bottom: 20px;">Welcome, ${firstName}! 👋</h2>
             
-            <p style="color: #4b5563; line-height: 1.6; margin-bottom: 25px;">
+            <p style="color:rgb(81, 90, 103); line-height: 1.6; margin-bottom: 25px;">
               Thank you for signing up for Job Tracker! To complete your registration and start tracking your job applications, 
               please verify your email address by clicking the button below.
             </p>
